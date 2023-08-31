@@ -14,8 +14,6 @@ def upload(user_id: str, upload_file_path: str, upload_dest_file_path: str):
     except Exception:
         print("An error occurred during requesting for api")
 
-    print(response.__dict__)
-
     # レスポンスのチェック
     if response.status_code != 201:
         print("reponse status is not correct")
