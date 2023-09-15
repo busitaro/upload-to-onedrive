@@ -1,6 +1,7 @@
 import requests
 
 from graph_auth import read_token
+from graph_auth import ApiError
 
 
 def upload(user_id: str, upload_file_path: str, upload_dest_file_path: str):
@@ -9,15 +10,11 @@ def upload(user_id: str, upload_file_path: str, upload_dest_file_path: str):
     url = f"https://graph.microsoft.com/v1.0/users/{user_id}/drive/items/root:/{upload_dest_file_path}:/content"
 
     # APIの実行
-    try:
-        response = requests.put(url, data=read_file(upload_file_path), headers=header)
-    except Exception:
-        print("An error occurred during requesting for api")
+    response = requests.put(url, data=read_file(upload_file_path), headers=header)
 
     # レスポンスのチェック
-    if response.status_code != 201:
-        print("reponse status is not correct")
-        print(response._content.decode(encoding="utf-8"))
+    if response.status_code not in (200, 201):
+        raise ApiError(response)
 
     return response
 
